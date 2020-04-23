@@ -204,7 +204,9 @@ void PANEL_CONTROL::beep(uint16_t tiempo=60)
 {
   //genera un pitido de duracion 'tiempo'
   static uint16_t duracion;
+  static bool FLAG_beep_anterior;  //para evitar reescribir en el pin del zumbador durante el tiempo que esta activo
   if(FLAG_beep==false){
+    FLAG_beep_anterior = false;
     duracion=tiempo;
   }
   FLAG_beep = true;
@@ -216,7 +218,10 @@ void PANEL_CONTROL::beep(uint16_t tiempo=60)
     FLAG_beep = false;
     controlBeep = 0;
   }
-  digitalWrite(PIN_zumbador, FLAG_beep);
+  if(FLAG_beep!=FLAG_beep_anterior){
+    FLAG_beep_anterior = FLAG_beep;
+    digitalWrite(PIN_zumbador, FLAG_beep);
+  }
 }
 
 
