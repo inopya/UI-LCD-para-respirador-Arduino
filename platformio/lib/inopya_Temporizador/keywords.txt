@@ -1,0 +1,6 @@
+Temporizador_inopya	KEYWORD1
+estado				KEYWORD2
+begin				KEYWORD2
+stop				KEYWORD2
+call_time			KEYWORD2
+time				KEYWORD2
