@@ -208,8 +208,9 @@ void PANEL_CONTROL::beep(uint16_t tiempo=60)
   if(FLAG_beep==false){
     FLAG_beep_anterior = false;
     duracion=tiempo;
+    FLAG_beep = true;  
   }
-  FLAG_beep = true;
+
   static uint16_t controlBeep;
   if(controlBeep<duracion){ //cada ciclo, en teoria 1 ms
     controlBeep++;
