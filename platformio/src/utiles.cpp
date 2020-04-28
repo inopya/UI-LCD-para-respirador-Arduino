@@ -1,3 +1,20 @@
+ /*
+  #       _\|/_   A ver..., ¿que tenemos por aqui?
+  #       (O-O)        
+  # ---oOO-(_)-OOo---------------------------------
+   
+   
+  ##########################################################
+  # ****************************************************** #
+  # *            LCD PARA REESPIRATOR 23??               * #
+  # *          Autor:  Eulogio López Cayuela             * #
+  # *            https://github.com/inopya/              * #
+  # *       Versión v1.0      Fecha: 17/04/2020          * #
+  # ****************************************************** #
+  ##########################################################
+*/
+
+
 // /*
 //   mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 //   .............................................................................................
@@ -13,6 +30,11 @@
 #include "definiciones.h"
 #include "utiles.h"
 #include "pinout.h"   //que los pines al final vengan en los objetos !!
+
+#include "lcd_virtual.h"
+
+//creaacion del objeto 'lcd con buffer de escritura', para uso interno de la clase panel de control
+LCD_CON_BUFFER  lcd(PIN_RS,PIN_E,PIN_D7,PIN_D6,PIN_D5,PIN_D4);//pines lcd(rs,e,d4,d5,d6,d7)
 
 
 
@@ -34,11 +56,12 @@ void PANEL_CONTROL::update()
 {
   _contadorTicksReloj++;
 
+  lcd.lcdReadBuffer(); //obtiene un caracter del buffer de impresion y lo envia  al lcd
   updatePulsadores();
 
   if(FLAG_parpadeo_edicion){
     //FLAG_MODO_EDICION = true;
-    parpadeoMenuAlPulsar();     // iniciar el prod¡cesod e ediciond e consignas/parpadeo del menu
+    parpadeoMenuAlPulsar();     // iniciar el proceso de edicion de consignas/parpadeo del menu
     modificarConsigna();        // ver si hay actividad en el encoder y hay que modificar alguna consigna
   
     _valorEncoder+=leerEncoder();
@@ -79,12 +102,14 @@ void PANEL_CONTROL::mostrarListadoAlarmas()
   }
   
   if( _valorEncoder !=_valorAnteriorEncoder ){
+    mostrarLineaAlarma();  //ahora mismo es atrezo :)
 
     _valorAnteriorEncoder = _valorEncoder;
     /* PARCHE TEMPORAL PARA PRUEBAS */
     ultraitoa(_valorEncoder , msg_valorItoA);
-    pantallaPrint(15,1, erase_msg);
-    pantallaPrint(16,1, msg_valorItoA);
+    pantallaPrint(15,0, erase_msg);
+    pantallaPrint(16,0, msg_valorItoA);
+
   }
 
 }
@@ -102,7 +127,7 @@ void PANEL_CONTROL::modificarConsigna()
   }
 
 
-  static  char buffer_msg_parpadeo[11];
+  static  char buffer_msg_temporal[11];
   static uint8_t posicionCursor_x;
 
   //primera pulsacion , inicio de edicion de consigas
@@ -116,29 +141,29 @@ void PANEL_CONTROL::modificarConsigna()
 
     switch (estadoPulsadores) {
       case 1:  //rpm
-        strncpy(buffer_msg_parpadeo, msg_rpm,11);
-        strncat(buffer_msg_parpadeo, "<",11);
+        strncpy(buffer_msg_temporal, msg_rpm,11);
+        strncat(buffer_msg_temporal, "<",11);
         ultraitoa(consignaRPM,msg_valorItoA);
-        strncat(buffer_msg_parpadeo, msg_valorItoA,11);
-        strncat(buffer_msg_parpadeo, ">",11);
+        strncat(buffer_msg_temporal, msg_valorItoA,11);
+        strncat(buffer_msg_temporal, ">",11);
         posicionCursor_x = 0;
         _valorEncoder=consignaRPM;
         break;
       case 2:  //pico
-        strncpy(buffer_msg_parpadeo, msg_pico,11);
-        strncat(buffer_msg_parpadeo, "<",11);
+        strncpy(buffer_msg_temporal, msg_pico,11);
+        strncat(buffer_msg_temporal, "<",11);
         ultraitoa(consignaPICO,msg_valorItoA);
-        strncat(buffer_msg_parpadeo, msg_valorItoA,11);
-        strncat(buffer_msg_parpadeo, ">",11);
+        strncat(buffer_msg_temporal, msg_valorItoA,11);
+        strncat(buffer_msg_temporal, ">",11);
         posicionCursor_x = 0;
           _valorEncoder=consignaPICO;
         break;
       case 4:   //peep >> msg_parpadeo = msg_peep;
-        strncpy(buffer_msg_parpadeo, msg_peep,11);
-        strncat(buffer_msg_parpadeo, "<",11);
+        strncpy(buffer_msg_temporal, msg_peep,11);
+        strncat(buffer_msg_temporal, "<",11);
         ultraitoa(consignaPEEP,msg_valorItoA);
-        strncat(buffer_msg_parpadeo, msg_valorItoA,11);
-        strncat(buffer_msg_parpadeo, ">",11);
+        strncat(buffer_msg_temporal, msg_valorItoA,11);
+        strncat(buffer_msg_temporal, ">",11);
         posicionCursor_x=0;
           _valorEncoder=consignaPEEP;
         break;
@@ -151,7 +176,7 @@ void PANEL_CONTROL::modificarConsigna()
     if(FLAG_MOSTAR_ALARMAS){
       return;
     }
-    pantallaPrint(posicionCursor_x,1, buffer_msg_parpadeo);
+    pantallaPrint(posicionCursor_x,1, buffer_msg_temporal);
     pantallaPrint(10,1, erase_msg);
     return;
   }
@@ -181,7 +206,7 @@ void PANEL_CONTROL::modificarConsigna()
 
 
 
-//                METODOS  MAS O MENOS ESTABLES Y QUE NO SE VANA A TOCAR POR AHORA
+//                METODOS ESTABLES Y QUE NO SE VANA A TOCAR POR AHORA
 
 
 
@@ -204,13 +229,13 @@ void PANEL_CONTROL::beep(uint16_t tiempo=60)
 {
   //genera un pitido de duracion 'tiempo'
   static uint16_t duracion;
-  static bool FLAG_beep_anterior;  //para evitar reescribir en el pin del zumbador durante el tiempo que esta activo
+  static boolean FLAG_beep_anterior;
   if(FLAG_beep==false){
     FLAG_beep_anterior = false;
+    FLAG_beep = true;
     duracion=tiempo;
-    FLAG_beep = true;  
   }
-
+  
   static uint16_t controlBeep;
   if(controlBeep<duracion){ //cada ciclo, en teoria 1 ms
     controlBeep++;
@@ -234,6 +259,19 @@ void PANEL_CONTROL::beep(uint16_t tiempo=60)
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 
+void PANEL_CONTROL::mostrarLineaCabecera()
+{
+  char msg_texto[21]= "RespiMenu v1  inopya";   //10
+  pantallaPrint(0,0, msg_texto);
+  return;
+}
+
+void PANEL_CONTROL::mostrarLineaAlarma()
+{
+  char msg_texto[21]= "  >>  ALARMAS n     ";   //10
+  pantallaPrint(0,0, msg_texto);
+  return;
+}
 
 void PANEL_CONTROL::mostrarLineaMenus()
 {
@@ -322,6 +360,8 @@ void PANEL_CONTROL::parpadeoMenuAlPulsar()
     //así que mejor refresco toda la linea  de menus :()
     mostrarLineaMenus();
 
+    mostrarLineaCabecera();  //atrezo temporal...
+
     if(contador_parpadeos<200){  // para evirar un doble pitido si salimos aceptando
       beep();  //pequeño beep al terminar la edicion de un campo
       //en caso contrario >=200, nos conformamos con el 'bip' que hizo el boton
@@ -352,7 +392,10 @@ void PANEL_CONTROL::ultraitoa( int valor , char *salida )
 {
   //Jose Luis Perez Barrales 
   //https://gitlab.com/joseluisperezbarrales/
+  //con algunos retoques inopya
   
+  bool FLAG_centenas = true;
+
   /*   CENTENAS   */
     int contcentenas=-1;
     if( valor > 999 )
@@ -372,8 +415,11 @@ void PANEL_CONTROL::ultraitoa( int valor , char *salida )
       *salida = '0'+contcentenas;  // añadimos las centenas a la cadena
     }
     else{
+      FLAG_centenas = false;
       *salida = ' ';                // si no hay centenas, sustituimos por un espacio
     }
+                                    //si sustituimos el if anterior por esta linea
+    //*salida = '0'+contcentenas;   // forzamos cero en las centenas para numeros de dos cifra
     salida++;
 
   /*   DECENAS   */
@@ -386,7 +432,21 @@ void PANEL_CONTROL::ultraitoa( int valor , char *salida )
     //  En este punto  valor es negativo , le sumamos 10 y estamos en el rango { 0 , 9 }
     valor+=10;
 
-    *salida = '0'+contcentenas;   // añadimos las decenas (reusamos la variable "contcentenas")
+
+    if(FLAG_centenas==false){
+      if(contcentenas>0){
+      *salida = '0'+contcentenas;  // añadimos las decenas a la cadena
+      }
+      else{
+      *salida = ' ';                // si no hay decenas, sustituimos por un espacio
+      }
+    }
+    else{
+      *salida = '0'+contcentenas;  
+    }
+                                    //si sustituimos el if anterior por esta linea
+    //*salida = '0'+contcentenas;   // forzamos cero en las decenas para numeros de una cifra
+
     salida++;
 
     /*   UNIDADES   */
@@ -411,7 +471,7 @@ void PANEL_CONTROL::actualizarContadorAlarmas()
     pantallaPrint(15,2, buffer_msg_alarmas);
 
     contadorALARMAS_anterior = contadorALARMAS;
-    beep(500);  // ¿un pitido largo para advertir de una nueva alarma? 
+    //beep(500);  // ¿un pitido largo para advertir de una nueva alarma? 
   }
 }
 
@@ -419,20 +479,16 @@ void PANEL_CONTROL::actualizarContadorAlarmas()
 
 void PANEL_CONTROL::setupPantalla()
 {
-  /* Inicializar el LCD con el número de  columnas y filas del LCD */
-  lcd.begin(20,4);
+  lcd.lcdInit();
 
-  //lcd.clear();
+  // lcd.lcdLocate(0,0);
+  // //          "0123456789ABCDEFGIJK"
+  // lcd.lcdWrite2buffer("RespiMenu v1  inopya");
 
-  lcd.setCursor(0,0);
-  //          "0123456789ABCDEFGIJK"
-  lcd.print(F("RespiMenu v1  inopya"));
+  mostrarLineaCabecera();     //mostar cabecera  (en la linea 0)
+  mostrarLineaConsignas();    //mostar consignas (en la linea 1)
+  mostrarLineaMenus();        //mostar menus     (en la linea 3)
 
-  mostrarLineaConsignas();   //mostar consignas (en la linea 1)
-
-  lcd.setCursor(0,3);
-  //          "0123456789ABCDEFGIJK"   //gia de espacio disponible
-  lcd.print(F("PEEP PICO RPM  ALARM"));
   if(FLAG_MODO_DEBUG){
     Serial.print("peep: ");Serial.print(consignaPEEP); 
     Serial.print(" ,pico: ");Serial.print(consignaPICO); 
@@ -442,24 +498,44 @@ void PANEL_CONTROL::setupPantalla()
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-void PANEL_CONTROL::pantallaPrint(uint8_t x, uint8_t y,  char *info)
+void PANEL_CONTROL::pantallaPrint(uint8_t x, uint8_t y,  const char *info)
 {
-  //return;  //DEBUG, para medir tiempos sin la pantalla
-  lcd.setCursor(x, y);
-  lcd.print(info);
-
+  lcd.lcdLocate(x,y);         //guarda en buffer las coordenadas de escritura en lcd
+  lcd.lcdWrite2buffer(info);  //guarda en el buffer el texto que ha de mostrarse en el lcd
 }
 
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-void PANEL_CONTROL::pantallaPrint2(uint8_t x, uint8_t y, const char *info[])  //  SIN uso
-{
-  lcd.setCursor(x, y);
-  //          "0123456789ABCDEFGIJK"
-  //lcd.print(info);
-}
+// PANEL_CONTROL::PANEL_CONTROL( uint8_t pin1, uint8_t pin2, uint8_t pin3, 
+//                    uint8_t pin4, uint8_t pin5, uint8_t pin6, bool pullup)
+PANEL_CONTROL::PANEL_CONTROL(  bool pullup)
 
-// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  _FLAG_PULLUP = pullup;
+  
+    // constructor, por defecto pulldown
+    // usamos aqui los pines solo para el tema de pullup 
+    // ya que no se controlarlo con los registros PORT
+
+  if( _FLAG_PULLUP ){
+    pinMode(PIN_peep, INPUT_PULLUP);
+    pinMode(PIN_pico, INPUT_PULLUP);
+    pinMode(PIN_rpm, INPUT_PULLUP);
+    pinMode(PIN_CLK, INPUT_PULLUP);
+    pinMode(PIN_DT, INPUT_PULLUP);
+    pinMode(PIN_alarm, INPUT_PULLUP);
+  }
+  else{
+    pinMode(PIN_peep, INPUT);
+    pinMode(PIN_pico, INPUT);
+    pinMode(PIN_rpm, INPUT);
+    pinMode(PIN_CLK, INPUT);
+    pinMode(PIN_DT, INPUT);
+    pinMode(PIN_alarm, INPUT);
+  } 
+  _estadoAnteriorPulsadores = 0;
+}
 
 void PANEL_CONTROL::mostarEdicionConsignas()   //  SIN uso
 {
@@ -544,14 +620,14 @@ uint8_t PANEL_CONTROL::leerPulsadores()
   //   ( control de beep aqui parece que queda mas natural )
    if( (_contadorInternoPulsador >= PULSACION_CORTA  ) && 
        (_contadorInternoPulsador < PULSACION_CORTA+5) &&
-       (FLAG_beep==false ) ){  //que el beep dure 60ms como mucho
-    beep(80);
+       (FLAG_beep==false ) ){  
+    beep(80); //pitido de 60ms
   }
 
    if( (_contadorInternoPulsador >= PULSACION_LARGA  ) && 
        (_contadorInternoPulsador < PULSACION_LARGA+5) &&
-       (FLAG_beep==false ) ){  //que el beep dure 60ms como mucho
-    beep(280);
+       (FLAG_beep==false ) ){  
+    beep(280);  //pitido de 280ms
   }
 
   return 0;           //todavia estamos a medio leer...
@@ -593,10 +669,10 @@ void PANEL_CONTROL::updatePulsadores()
   tipoPulsacion = leerPulsadores();
   static uint8_t teclaOK=0;
   if( tipoPulsacion > 0 ){
-    _valorAnteriorEncoder = -1;     //ante nueva pulsacion ponemos el valor encoder fuera de rango
-    if(FLAG_parpadeo_edicion==false){         //renombrar a FLAG_MODO_EDICION?
-      teclaOK = _estadoAnteriorPulsadores;    //Almacenamos  pulsacion a efectos de 
-    }                                         //aceptar o no consignas en edicion
+    _valorAnteriorEncoder = -1;                   //ante nueva pulsacion ponemos el valor encoder fuera de rango
+    if(FLAG_parpadeo_edicion==false){             //renombrar a FLAG_MODO_EDICION?
+      teclaOK = _estadoAnteriorPulsadores;        //Almacenamos  pulsacion a efectos de 
+    }                                             //aceptar o no consignas en edicion
     estadoPulsadores = _estadoAnteriorPulsadores; //Ya que una pulsacion se detacta al soltar
     reset();                                      //es el estado anterior el que nos dice
     FLAG_parpadeo_edicion = true;                 //la tecla que se habia pulsado
@@ -606,7 +682,7 @@ void PANEL_CONTROL::updatePulsadores()
       _pulsacionAnterior = teclaOK;
       teclaOK=0;
       if(FLAG_MODO_DEBUG){
-        Serial.print(F("Carga de _pulsacionAnterior: "));
+        Serial.print(F("Carga de _pulsacionAnterior para comparaciones: "));
         Serial.println(_pulsacionAnterior);
       }
     }

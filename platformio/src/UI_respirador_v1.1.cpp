@@ -1,4 +1,20 @@
 
+ /*
+  #       _\|/_   A ver..., ¿que tenemos por aqui?
+  #       (O-O)        
+  # ---oOO-(_)-OOo---------------------------------
+   
+   
+  ##########################################################
+  # ****************************************************** #
+  # *            LCD PARA REESPIRATOR 23??               * #
+  # *          Autor:  Eulogio López Cayuela             * #
+  # *            https://github.com/inopya/              * #
+  # *       Versión v1.0      Fecha: 17/04/2020          * #
+  # ****************************************************** #
+  ##########################################################
+*/
+
 
 #include "pinout.h"
 #include "definiciones.h"
@@ -7,7 +23,7 @@
 #include "Temporizador_inopya.h" 
 
 
-PANEL_CONTROL miPanelControl(PIN_peep, PIN_pico, PIN_rpm, PIN_CLK, PIN_DT, PIN_alarm, true);      //pullup
+PANEL_CONTROL miPanelControl(true);    //true --> pullup
 
 
 Temporizador_inopya relojMillis;
@@ -28,7 +44,7 @@ void setup()
   miPanelControl.setupPantalla();
   pinMode(PIN_zumbador, OUTPUT);
   
-  Serial.println(F("version 1.1"));
+  Serial.println(F("version 1.2"));
 
   pinMode(13, OUTPUT); 
 
@@ -52,11 +68,11 @@ void loop()
   }
 
 
-
- if( FLAG_un_milisegundo ){
-     FLAG_un_milisegundo = false;
+  /*       <<<<<     TAREAS ASOCIADAS A LOS FLAGs DE LOS RELOJES  (PRUEBAS/DEBUG)  >>>>>                      */
+  if( FLAG_un_milisegundo ){
+    FLAG_un_milisegundo = false;
     miPanelControl.update(); 
- }
+  }
 
   if( FLAG_un_segundo ){
     FLAG_un_segundo = false;
