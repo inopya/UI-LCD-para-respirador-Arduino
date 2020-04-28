@@ -1,4 +1,4 @@
-# UI LCD para respirador Arduino v1
+# UI LCD para respirador Arduino v1.1
 Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 
 *Todas las tareas de lectura de pulsadores y encoder, asi como refrescos de pantalla optimizados para RT*
@@ -18,9 +18,15 @@ Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 - Se cancela la edición sin realizar cambios si no se pulsa ninguna tecla durante de 5 segundos.
 - Se realizan cambios en las consignas si se pulsa tecla para aceptar.
 - Acceso a pulsadores y encoder mediante los bit del puerto al que estan conectados
+- Sustituido el acceso al lcd mediante libreria por una solucion de acceso en modo 'raw'  adaptada para usar Lcd20x4 en modo 4 bits. Los textos a imprimir se envian a un buffer cuando una impresion es solicitada por el programa y posteriormente se aprovechan pequeños intervalos de tiempo entre llamadas de un ciclo principal para ir mostrando 'poco a poco' dichos caracteres en pantalla de manera que la tarea de imprimir consuma su tiempo necesario en pequeños intervalos.
+	basada en:
+		LCD driver respirator, de Alberto ferrer
+		https://gitlab.com/alfersi/lcdhal/-/tree/master
+	y en:
+		https://forum.arduino.cc/index.php?topic=287644.0
+
 
 
 **TODO**
 - Falta por implementar la muestra en pantalla del listado de alarmas
-- Mejorar el tema de la libreria LCD para ganarle algunos milisegundos
 - Reorganizar y simplificar el acceso a puertos para facilitar posibles cambios en los pines utilizados
