@@ -12,7 +12,7 @@ Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 	Jose Luis Perez Barrales 
 	https://gitlab.com/joseluisperezbarrales/
 	
-- Correcta modificación de consignas mediante el encoder.
+- Correcta modificación de consignas mediante el encoder. Establecidas variables para el control de limites de cada consigna.
 - Funcionando los pitidos de aviso de pulsación de teclado (y nuevas alarmas).
 - Funciona el parpadeo del menu seleccionado duarante el tiempo que dura la edición. 
 - Se cancela la edición sin realizar cambios si no se pulsa ninguna tecla durante de 5 segundos.
