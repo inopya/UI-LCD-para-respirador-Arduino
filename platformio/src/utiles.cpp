@@ -65,6 +65,9 @@ void PANEL_CONTROL::update()
     modificarConsigna();        // ver si hay actividad en el encoder y hay que modificar alguna consigna
   
     _valorEncoder+=leerEncoder();
+    //Control de limites de las consignas. Se asignan al pulsar. Se controlan aqui
+    if(_valorEncoder<_valorEncoderMin) { _valorEncoder=_valorEncoderMin; }
+    if(_valorEncoder>_valorEncoderMax) { _valorEncoder=_valorEncoderMax; }
 
     if(FLAG_MOSTAR_ALARMAS==true){
       mostrarListadoAlarmas();
@@ -102,7 +105,8 @@ void PANEL_CONTROL::mostrarListadoAlarmas()
   }
   
   if( _valorEncoder !=_valorAnteriorEncoder ){
-    mostrarLineaAlarma();  //ahora mismo es atrezo :)
+
+    mostrarLineaAlarma();             //ahora mismo es atrezo :)
 
     _valorAnteriorEncoder = _valorEncoder;
     /* PARCHE TEMPORAL PARA PRUEBAS */
@@ -148,6 +152,9 @@ void PANEL_CONTROL::modificarConsigna()
         strncat(buffer_msg_temporal, ">",11);
         posicionCursor_x = 0;
         _valorEncoder=consignaRPM;
+        _valorEncoderMin = consignaRPMminima;
+        _valorEncoderMax = consignaRPMmaxima; 
+         
         break;
       case 2:  //pico
         strncpy(buffer_msg_temporal, msg_pico,11);
@@ -156,7 +163,9 @@ void PANEL_CONTROL::modificarConsigna()
         strncat(buffer_msg_temporal, msg_valorItoA,11);
         strncat(buffer_msg_temporal, ">",11);
         posicionCursor_x = 0;
-          _valorEncoder=consignaPICO;
+        _valorEncoder=consignaPICO;
+        _valorEncoderMin = consignaPICOminima;
+        _valorEncoderMax = consignaPICOmaxima;
         break;
       case 4:   //peep >> msg_parpadeo = msg_peep;
         strncpy(buffer_msg_temporal, msg_peep,11);
@@ -165,10 +174,14 @@ void PANEL_CONTROL::modificarConsigna()
         strncat(buffer_msg_temporal, msg_valorItoA,11);
         strncat(buffer_msg_temporal, ">",11);
         posicionCursor_x=0;
-          _valorEncoder=consignaPEEP;
+        _valorEncoder=consignaPEEP;
+        _valorEncoderMin = consignaPEEPminima;
+        _valorEncoderMax = consignaPEEPmaxima;
         break;
       case 32:   //alarmas >> msg_parpadeo = msg_peep;
         _valorEncoder = contadorALARMAS;   // Así revisamos las alarma de la mas reciete a la mas antigüa
+        _valorEncoderMin = 0;
+        _valorEncoderMax = contadorALARMAS;
         FLAG_MOSTAR_ALARMAS = true;
         //return;
     }
@@ -206,7 +219,7 @@ void PANEL_CONTROL::modificarConsigna()
 
 
 
-//                METODOS ESTABLES Y QUE NO SE VANA A TOCAR POR AHORA
+//                METODOS  MAS O MENOS ESTABLES Y QUE NO SE VANA A TOCAR POR AHORA
 
 
 
@@ -755,11 +768,11 @@ void PANEL_CONTROL::asignarCosignaYterminarEdicion()
 
 void PANEL_CONTROL::mostrarValorEncoder()
 {
-  if(_valorEncoder<40){         // limite de seguridad inferior,
-    _valorEncoder = 40;         // (deberemos asignarlo en funcion de las consignas)
+  if(_valorEncoder<_valorEncoderMin){         // limite de seguridad inferior,
+    _valorEncoder = _valorEncoderMin;         // (queda asignado en funcion de las consignas)
   }
-  else if(_valorEncoder>120){   // limite de seguridad superior,
-    _valorEncoder=120;          // (deberemos asignarlo en funcion de las consignas)
+  else if(_valorEncoder>_valorEncoderMax){    // limite de seguridad superior,
+    _valorEncoder=_valorEncoderMax;           // (queda signado en funcion de las consignas)
   }
   /* Refrescamos el valor editado por el encoder solo si ha cambiado */
   if(_valorEncoder !=_valorAnteriorEncoder){
@@ -769,3 +782,5 @@ void PANEL_CONTROL::mostrarValorEncoder()
     _valorAnteriorEncoder = _valorEncoder;
   }
 }
+
+

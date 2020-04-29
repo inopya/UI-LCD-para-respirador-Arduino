@@ -45,14 +45,10 @@ class PANEL_CONTROL
     //mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
     //  publico      PANTALLA    //mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 
-    uint8_t listaDeAlarmas [250];
+    uint8_t listaDeAlarmas [250];   //
 
-//    const PROGMEM char msg_peep[6]  = "PEEP ";
-//     const PROGMEM char msg_pico[6] ="PICO ";
-//     const PROGMEM char msg_rpm[6]  ="RPM  ";
-//     const PROGMEM char msg_alarm[6]="ALARM";
-//     const PROGMEM char erase_msg[6]="     ";
-    
+
+
     char msg_peep[6] ="PEEP ";  //estos deberian estar en PROGMEM, pero me dan problemas...
     char msg_pico[6] ="PICO ";  //estos deberian estar en PROGMEM, pero me dan problemas...
     char msg_rpm[6]  ="RPM  ";  //estos deberian estar en PROGMEM, pero me dan problemas...
@@ -63,13 +59,21 @@ class PANEL_CONTROL
     
     uint8_t consignaPEEP = 80;    // 
     uint8_t consignaPICO = 70;    //  } estos valores deberan venir de alguna parte
-    uint8_t consignaRPM =  60;    //
+    uint8_t consignaRPM =  30;    //
 
-    uint8_t contadorALARMAS =  10;        //cargado con un numero de alarmas para DEBUG
-    uint32_t _contadorTicksReloj = 0;     //lleva la cuenta de las veves que somos llamados (reloj interno)
-                                          // de la clase
-    bool FLAG_MODO_DEBUG=true;        //permite los 'Serial.print' repartidos por el codigo para prueba
-    bool FLAG_MOSTAR_ALARMAS = false; //control del boton del encoder en modo mostrar alarmas
+    uint8_t consignaPEEPminima = 60;    // 
+    uint8_t consignaPICOminima = 50;    //  } estos valores deberan venir de alguna parte
+    uint8_t  consignaRPMminima =  20;    //
+
+    uint8_t consignaPEEPmaxima = 100;    // 
+    uint8_t consignaPICOmaxima = 95;    //  } estos valores deberan venir de alguna parte
+    uint8_t  consignaRPMmaxima =  35;    //
+
+    uint8_t contadorALARMAS =  10;         // cargado con un numero de alarmas para DEBUG
+    uint32_t _contadorTicksReloj = 0;      // lleva la cuenta de las veves que somos llamados (reloj interno)
+                                           // de la clase
+    bool FLAG_MODO_DEBUG=false;            // permite los 'Serial.print' repartidos por el codigo para prueba
+    bool FLAG_MOSTAR_ALARMAS = false;      // control del boton del encoder en modo mostrar alarmas
 
 
     void setupPantalla( void );                       // inicializa y muestra mensaje de bienvenida
@@ -87,7 +91,7 @@ class PANEL_CONTROL
 
     void mostarEdicionConsignas( void );   //sin uso, por si separo una aprte del codigo??
     //int Menu( char *menuitems[] , int items );
-
+    void mostrarMensajeAlarma (const char * const * message);
 
     //mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
     //     publico   ENCODER    //mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
@@ -116,6 +120,8 @@ class PANEL_CONTROL
 
     uint8_t _sentidoGiroEncoder = 0;       // almacena el sentido de giro
     uint8_t _valorEncoder = 0;             //el valor de consigna que se esta modificando
+    uint8_t _valorEncoderMax = 0; 
+    uint8_t _valorEncoderMin = 0; 
     void modificarConsigna();
 
     int16_t _valorAnteriorEncoder = -1;     // para controlar si cambia el valor y asi ahorrar refrescos de lcd
