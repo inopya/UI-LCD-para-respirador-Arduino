@@ -44,9 +44,10 @@ void setup()
   miPanelControl.setupPantalla();
   pinMode(PIN_zumbador, OUTPUT);
   
-  Serial.println(F("version 1.2"));
+  Serial.println(F("version 1.1"));
 
   pinMode(13, OUTPUT); 
+  delay(1000);
 
 }
 
@@ -128,19 +129,19 @@ void simularValoresDeSensores()
   valorPico = valorActualPico;
   valorRpm = valorActualRpm;
 
-  if( (valorActualPeep<miPanelControl.consignaPEEP-20) || 
-                              (valorActualPeep>miPanelControl.consignaPEEP+20) ){
-    miPanelControl.contadorALARMAS ++;
+  if( (valorActualPeep<miPanelControl.consignaPEEPminima) || 
+                              (valorActualPeep>miPanelControl.consignaPEEPmaxima) ){
+    miPanelControl.contadorALARMAS++;
     valorActualPeep = miPanelControl.consignaPEEP;
   }
-  if( (valorActualPico<miPanelControl.consignaPICO-20) || 
-                              (valorActualPico>miPanelControl.consignaPICO+20) ){
-    miPanelControl.contadorALARMAS ++;
+  if( (valorActualPico<miPanelControl.consignaPICOminima) || 
+                              (valorActualPico>miPanelControl.consignaPICOmaxima) ){
+    miPanelControl.contadorALARMAS++;
     valorActualPico = miPanelControl.consignaPICO;
   }
-  if( (valorActualRpm<miPanelControl.consignaRPM-20) || 
-                              (valorActualRpm>miPanelControl.consignaRPM+20) ){
-    miPanelControl.contadorALARMAS ++;
+  if( (valorActualRpm<miPanelControl.consignaRPMminima) || 
+                              (valorActualRpm>miPanelControl.consignaRPMmaxima) ){
+    miPanelControl.contadorALARMAS++;
     valorActualRpm = miPanelControl.consignaRPM;
   }
 }
