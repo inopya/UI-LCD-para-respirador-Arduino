@@ -228,7 +228,7 @@ void LCD_CON_BUFFER::lcdReadBuffer()
                                     // de acceso raw al lcd ( delayMicroseconds(37) en el final de la funcion,
                                     // para que se estabilicen los datos de cada caracter
 
-  while( contadorImpresiones<1 && contadorBuffer<bufferLimit ){
+  while( contadorImpresiones<1 && bufferFreeSpace<bufferLimit ){
     if( buffer_LCD[readIndex].tipo <2 ){
       lcdRawWrite(buffer_LCD[readIndex].comandoCaracter, buffer_LCD[readIndex].tipo);
       buffer_LCD[readIndex].tipo = 5;  //tipo nulo, asi borramos lo que ya hemos enviado el lcd
