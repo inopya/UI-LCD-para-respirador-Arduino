@@ -259,7 +259,8 @@ void PANEL_CONTROL::beep(uint16_t tiempo=60)
   }
   if(FLAG_beep!=FLAG_beep_anterior){
     FLAG_beep_anterior = FLAG_beep;
-    digitalWrite(PIN_zumbador, FLAG_beep);
+    //digitalWrite(PIN_zumbador, FLAG_beep);
+    bitWrite(PORTB,4,FLAG_beep);	  
   }
 }
 
