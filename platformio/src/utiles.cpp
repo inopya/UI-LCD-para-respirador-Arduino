@@ -366,13 +366,12 @@ void PANEL_CONTROL::parpadeoMenuAlPulsar()
     FLAG_parpadeo_edicion = false;
     _pulsacionAnterior = 0;
 
-    //recuperamos la liena de consignas
+    //recuperamos la linea de consignas
     mostrarLineaConsignas();
 
-    //por ahora a veces tengo efectos raros y al salir  no se actualiza el que debe
-    //pantallaPrint(posicionCursor_x,3, buffer_msg_parpadeo);  //msg_parpadeo
-    //así que mejor refresco toda la linea  de menus :()
-    mostrarLineaMenus();
+    //mostrarLineaMenus();                                   // podemos ahorrar unos us 
+    pantallaPrint(posicionCursor_x,3, buffer_msg_parpadeo);  // actualizando solo la parte que estuvo parpadeando
+
 
     mostrarLineaCabecera();  //atrezo temporal...
 
