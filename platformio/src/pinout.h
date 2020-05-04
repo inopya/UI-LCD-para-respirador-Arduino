@@ -52,10 +52,10 @@
 
 // pines del lcd 
 
-#define PIN_D4             22   //4   // PG5  bitWrite(PORTG,5,...)
-#define PIN_D5             23   //5   // PE3  bitWrite(PORTE,3,...)
-#define PIN_D6             24   //6   // PH3  bitWrite(PORTH,3,...)
-#define PIN_D7             25   //7   // PH4  bitWrite(PORTH,4,...)
+#define PIN_D4             22   // PA0  bitWrite(PORTA,0,...)
+#define PIN_D5             23   // PA1  bitWrite(PORTA,1,...)
+#define PIN_D6             24   // PA2  bitWrite(PORTA,2,...)
+#define PIN_D7             25   // PA3  bitWrite(PORTA,3,...)
 
 #define PIN_E               8   // PH5  bitWrite(PORTH,5,...)
 #define PIN_RS              9   // PH6  bitWrite(PORTH,6,...)
@@ -85,8 +85,9 @@
 
 
 // 30,31,32,33,34,35,36,37    <-- Pines nomenclatura Arduino
-//  7, 6, 5, 4, 3, 2, 1, 0    <-- Bits del registro del puerto C,    PORC
+//  7, 6, 5, 4, 3, 2, 1, 0    <-- Bits del registro del puerto C,    PORTC
 
-// NOTA: clock, mi cable rojo, data el marron
+// 29,28,27,26,25,24,23,22    <-- Pines nomenclatura Arduino
+//  7, 6, 5, 4, 3, 2, 1, 0    <-- Bits del registro del puerto A,    PORTA
 
 
