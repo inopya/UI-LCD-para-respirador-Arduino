@@ -8,7 +8,7 @@ Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 - Responde a los pulsadores. 
 - Implementada la distincion entre pulsación corta y pulsación larga, (aunque es posible que no sea de interes)
 - Funciona el encoder.
-- Usada funcion ultraitoa para convertir a cadenas de caracteres las cifras que se envian al lcd
+- Usada funcion ultraitoa (aunque modificada) para convertir a cadenas de caracteres las cifras que se envian al lcd
 	Jose Luis Perez Barrales 
 	https://gitlab.com/joseluisperezbarrales/
 	
@@ -25,8 +25,10 @@ Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 	y en:
 		https://forum.arduino.cc/index.php?topic=287644.0
 
+- Añadidas mas opciones de menu para configuracion de parametros 'secundarios'
 
 
 **TODO**
 - Falta por implementar la muestra en pantalla del listado de alarmas
+- Falta pantalla de setup para parametro basicos/iniciales de la maquina, 
 - Reorganizar y simplificar el acceso a puertos para facilitar posibles cambios en los pines utilizados
