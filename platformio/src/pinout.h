@@ -52,10 +52,10 @@
 
 // pines del lcd 
 
-#define PIN_D4              4   // PG5  bitWrite(PORTG,5,...)
-#define PIN_D5              5   // PE3  bitWrite(PORTE,3,...)
-#define PIN_D6              6   // PH3  bitWrite(PORTH,3,...)
-#define PIN_D7              7   // PH4  bitWrite(PORTH,4,...)
+#define PIN_D4             22   //4   // PG5  bitWrite(PORTG,5,...)
+#define PIN_D5             23   //5   // PE3  bitWrite(PORTE,3,...)
+#define PIN_D6             24   //6   // PH3  bitWrite(PORTH,3,...)
+#define PIN_D7             25   //7   // PH4  bitWrite(PORTH,4,...)
 
 #define PIN_E               8   // PH5  bitWrite(PORTH,5,...)
 #define PIN_RS              9   // PH6  bitWrite(PORTH,6,...)

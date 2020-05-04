@@ -30,9 +30,18 @@ Temporizador_inopya relojMillis;
 Temporizador_inopya relojSegundos;
 
 void simularValoresDeSensores( void );
+void medirTiempos( void );
+
 
 bool FLAG_un_segundo = true;
 bool FLAG_un_milisegundo = true;
+
+
+
+uint32_t inicio;
+uint32_t fin;
+uint32_t contador1=0;
+uint32_t contador2=0;
 
 
 
@@ -47,7 +56,9 @@ void setup()
   Serial.println(F("version 1.1"));
 
   pinMode(13, OUTPUT); 
+  digitalWrite(13,1);
   delay(1000);
+  digitalWrite(13,0);
 
 }
 
@@ -59,26 +70,80 @@ void loop()
   /*       <<<<<     RELOJES   PARA PRUEBAS/DEBUG    >>>>>                      */
 
   if( relojSegundos.estado()==false ){    
-    FLAG_un_segundo = true;               // simular una llamada cada 1 segundo
-    relojSegundos.begin(1000);
+    relojSegundos.begin(3000);
+    simularValoresDeSensores();
   }
+
 
   if( relojMillis.estado()==false ){ 
     FLAG_un_milisegundo = true;
     relojMillis.begin(1);                 // simular una llamada cada 1 milisegundo
+    miPanelControl.update(); 
   }
 
 
   /*       <<<<<     TAREAS ASOCIADAS A LOS FLAGs DE LOS RELOJES  (PRUEBAS/DEBUG)  >>>>>                      */
   if( FLAG_un_milisegundo ){
     FLAG_un_milisegundo = false;
-    miPanelControl.update(); 
+    //uint32_t inicio = micros();
+    //miPanelControl.update(); 
+    //uint32_t fin = micros();
+    //uint32_t tiempo_empleado = (fin-inicio);
+    //Serial.println(tiempo_empleado);
+
+    //if(tiempo_empleado>120){ digitalWrite(13,HIGH);Serial.println(tiempo_empleado); }
+    //else{ digitalWrite(13,LOW); }
+
+     contador1++;
+    // inicio =micros();
+    // miPanelControl.update();
+    // fin=micros();
+
+    // if(fin-inicio>=120){
+    //   Serial.print("Inopya: ");
+    //   Serial.print(contador1);
+    //   Serial.print(",");
+    //   Serial.println(fin-inicio);
+    //   contador1 = 0;
+    //   delay(1500);
+    // }
   }
 
-  if( FLAG_un_segundo ){
-    FLAG_un_segundo = false;
-    simularValoresDeSensores();
+
+
+  if (contador1 == 10000){
+    //medirTiempos();
+    contador1=0;
   }
+
+
+  /* benchMark */
+  //uint32_t inicio = micros();
+  //miPanelControl.update(); 
+  //for(uint32_t i=0;i<10000;i++){
+  //  digitalWrite(10,1);
+    //bitWrite(PORTB,7,0);
+    //setBit(PORTB,7);
+    //clearBit(PORTB,7);
+    //setBit(PORTB,4);  //altavoz
+  //}
+  
+  // uint32_t fin = micros();
+  // uint32_t tiempo_empleado = (fin-inicio);
+  // Serial.println(tiempo_empleado);
+  // clearBit(PORTB,4);
+  // while(true);
+
+
+  // delay(1);
+  // if(tiempo_empleado>100){
+  //   digitalWrite(13,HIGH);
+  // }
+  // else{
+  //   digitalWrite(13,LOW);
+  // }
+
+  //delay(100);
 }
 
 
@@ -93,55 +158,36 @@ void simularValoresDeSensores()
   //generar valores aleatorios para mostrar en la simulacion/DEBUG
 {
 
-  static uint8_t valorPeep = 0;
-  static uint8_t valorPico = 0;
-  static uint8_t valorRpm = 0;
-
-  static uint8_t valorActualPeep = miPanelControl.consignaPEEP;
-  static uint8_t valorActualPico = miPanelControl.consignaPICO;
-  static uint8_t valorActualRpm = miPanelControl.consignaRPM;
-
-  //randomSeed(analogRead(A15));
+  randomSeed(analogRead(A15));
   int a = random(-2, 3);
-
-  valorActualPeep += a;
+  miPanelControl.valorActualPeep += a;
 
   a = random(-2, 3);
-  valorActualPico +=a;
+  miPanelControl.valorActualPico +=a;
   
   a = random(-2, 3);
-  valorActualRpm += a; 
+  miPanelControl.valorActualRpm += a; 
 
-  if (valorActualPeep^valorPeep){
-    miPanelControl.ultraitoa(valorActualPeep, miPanelControl.msg_valorItoA);
-    miPanelControl.pantallaPrint(0,2, miPanelControl.msg_valorItoA);
-  }
-  if (valorActualPico^valorPico){
-    miPanelControl.ultraitoa(valorActualPico, miPanelControl.msg_valorItoA);
-    miPanelControl.pantallaPrint(5,2, miPanelControl.msg_valorItoA);
-  }
-  if(valorActualRpm^valorRpm ){
-    miPanelControl.ultraitoa(valorActualRpm, miPanelControl.msg_valorItoA);
-    miPanelControl.pantallaPrint(10,2, miPanelControl.msg_valorItoA);
-  }
-
-  valorPeep = valorActualPeep;
-  valorPico = valorActualPico;
-  valorRpm = valorActualRpm;
-
-  if( (valorActualPeep<miPanelControl.consignaPEEPminima) || 
-                              (valorActualPeep>miPanelControl.consignaPEEPmaxima) ){
-    miPanelControl.contadorALARMAS++;
-    valorActualPeep = miPanelControl.consignaPEEP;
-  }
-  if( (valorActualPico<miPanelControl.consignaPICOminima) || 
-                              (valorActualPico>miPanelControl.consignaPICOmaxima) ){
-    miPanelControl.contadorALARMAS++;
-    valorActualPico = miPanelControl.consignaPICO;
-  }
-  if( (valorActualRpm<miPanelControl.consignaRPMminima) || 
-                              (valorActualRpm>miPanelControl.consignaRPMmaxima) ){
-    miPanelControl.contadorALARMAS++;
-    valorActualRpm = miPanelControl.consignaRPM;
-  }
 }
+
+void medirTiempos()
+{
+  uint32_t inicio = micros();
+  uint32_t contador;
+  //pinMode(13,INPUT);
+
+  for(contador=0; contador <1000;contador++){
+    //digitalWrite(13,1);
+    //bitWrite(PORTB,7,1);
+    //digitalRead(13);
+    bitRead(PORTB,7);
+  }
+
+  uint32_t fin = micros();
+  Serial.print("Inopya: ");
+  Serial.print(contador);
+  Serial.print(",");
+  Serial.println(fin-inicio);
+  contador = 0;
+}
+
