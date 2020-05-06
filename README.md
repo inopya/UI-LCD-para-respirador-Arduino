@@ -1,4 +1,4 @@
-# UI LCD para respirador Arduino v1.1
+# UI LCD para respirador Arduino v1.2
 Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 
 *Todas las tareas de lectura de pulsadores y encoder, asi como refrescos de pantalla optimizados para RT*
@@ -26,6 +26,8 @@ Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 		https://forum.arduino.cc/index.php?topic=287644.0
 
 - Añadidas mas opciones de menu para configuracion de parametros 'secundarios'
+- Añadidos nuevos metodos de acceso al lcd. Ahora se puede seleccionar entre Buffer circular y modo "pantalla Virtual"
+
 
 
 **TODO**
