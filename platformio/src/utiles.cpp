@@ -130,7 +130,7 @@ void PANEL_CONTROL::update()
     leerEncoder(); 
 
     /* <<<< actualizar pulsadores  >>>>  */
-    updatePulsadores(); //si queremos leerlos cada ciertos ticks, revisar el codigo comentado arriba
+    updatePulsadores(); 
     if(FLAG_MODO_DEBUG && estadoPulsadoresActual!=0){
         Serial.print(F("tipo: "));Serial.print(tipoPulsacion);
         Serial.print(F(" ,estado viejo: "));Serial.print(estadoPulsadoresAnterior);
