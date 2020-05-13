@@ -34,3 +34,5 @@ Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 - Reorganizar y simplificar el acceso a puertos para facilitar posibles cambios en los pines utilizados
 - Pasar cadenas de texto a Flash
 
+
+![](./imagenes/panel_control.jpg)
