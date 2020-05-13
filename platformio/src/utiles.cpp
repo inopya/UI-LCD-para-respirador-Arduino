@@ -113,18 +113,6 @@ void PANEL_CONTROL::update()
   #endif
 
 
-  
-  // leer pulsadores solo cada cierto tiempo ? 
-  //(en este caso borrar manualmente la pulsacion al pasar por aqui)
-  // tipoPulsacion = 0;
-  // estadoPulsadores = 0;
-  // static uint8_t intervaloPulsador;
-  // intervaloPulsador++;
-  // if(intervaloPulsador>=5){   // compararlo "contra" el tiempo que queremos dejarlo abandonado
-  //   updatePulsadores(intervaloPulsador);  //esto actualiza  tipoPulsacion y estadoActualPulsadores
-  //   intervaloPulsador = 0;
-  // }
-
   /* <<<<  indicar con el buzzer todas las pulsaciones??  >>>>  */
   // if(tipoPulsacion==1){
   //   beep(80); //pitido corto
@@ -135,13 +123,6 @@ void PANEL_CONTROL::update()
 
 
   /* <<<< CONTROL DEL ESTADO ACTUAL  >>>>  */
-
-  if( modoMaquinaActual != modoMaquinaAnterior){
-    
-  }
-  //no leer los pulsadores ni el encoder en los mementos de cambio de estado
-  //para evitar perder interacciones que se deben arrastrar
-  
 
   /*   OJO NO LEER LOS PULSADORES ENTRE CAMBIOS DE ESTADO, (o ME ARRUINA CIERTAS DETECCIONES) */
   if( modoMaquinaActual == modoMaquinaAnterior){
@@ -219,7 +200,6 @@ void PANEL_CONTROL::update()
   if(FLAG_beep==true){
     beep();  
   }
-
 }
 
 
