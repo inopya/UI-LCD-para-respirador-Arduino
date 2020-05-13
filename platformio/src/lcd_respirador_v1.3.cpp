@@ -51,6 +51,8 @@ void setup()
   digitalWrite(13,1);
   delay(1000);
   digitalWrite(13,0);
+ 
+  // miPanelControl.FLAG_MODO_DEBUG=true;
 
 }
 
