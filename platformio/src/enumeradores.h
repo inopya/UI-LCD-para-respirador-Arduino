@@ -48,9 +48,9 @@ enum enumEstadosDisplay
 
 enum enumPulsadorID
 {
-  ID_PULSADOR_FR       = 1,   //es el valor decimal que tienen en el puerto en el que estan conectados
-  ID_PULSADOR_PICO     = 2,  
-  ID_PULSADOR_PEEP     = 4,
+  ID_PULSADOR_FR       =  1,   //es el valor decimal que tienen en el puerto en el que estan conectados
+  ID_PULSADOR_PICO     =  2,  
+  ID_PULSADOR_PEEP     =  4,
   ID_PULSADOR_ENCODER  = 32,
 };
 
@@ -70,15 +70,6 @@ enum enumMenuID
 
 
 
-
-//  ---------------  ENUMERADORES    sin uso por ahora  ---------------
-enum enumPinType
-{
-   PIN_TYPE_PULLUP   = 0,
-   PIN_TYPE_PULLDOWN = 1,
-};
-
-
 enum enumAlarmCode
 {
   ERR_PEEP_BAJO    =   1,
@@ -91,7 +82,16 @@ enum enumAlarmCode
   ERR_TRIGGER      =   8,
   ERR_RAMPA        =   9,
   ERR_BATERIA_LOW  =  10,
-  ERR_DESCONOCIDO  = 100,
-   
+  ERR_DESCONOCIDO  = 100, 
 };
+
+
+//  ---------------  ENUMERADORES    sin uso por ahora  ---------------
+enum enumPinType
+{
+   PIN_TYPE_PULLUP   = 0,
+   PIN_TYPE_PULLDOWN = 1,
+};
+
+
 
