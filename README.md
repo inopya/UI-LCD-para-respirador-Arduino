@@ -27,7 +27,8 @@ Interfaz de usuario mediante LCD 20x4 para respirador basado en Arduino
 
 - Añadidas mas opciones de menu para configuracion de parametros 'secundarios'
 - Implementada la muestra en pantalla del listado de alarmas
-- Disponible pantalla de setup para parametro basicos/iniciales de la maquina,
+- Disponible pantalla de setup para parametro basicos/iniciales de la maquina.
+- Disponible mediante el menu del encoder el modo Recruit (tiempo fijo de 40 segundos, con posibilidad de cancelar y volver a modo RUN)
 - Disponible  FLAG_MODO_DEBUG, que permite mostrar por serial ciertas informaciones utiles para pruebas
 
 **TODO** 
