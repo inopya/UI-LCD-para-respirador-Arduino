@@ -68,7 +68,7 @@ class PANEL_CONTROL
     { 30, 40,  50, "TIDAL", },
     { 35, 45,  55, "RAMPA", },
     {  8, 10,  16, "TRIGG", },
-    {  0,  0,   1, "RECRU", },   //modo recruit off por defecto
+    { 40, 40,  50, "RECRU", },   //modo recruit igaul no es necesario tener acceso
     {  1,  0,   0, "ALARM", },   //numero de alarmas si revicion, (max y min no tiene sentido)
 
   };

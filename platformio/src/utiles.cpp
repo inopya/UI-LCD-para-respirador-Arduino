@@ -664,14 +664,17 @@ void PANEL_CONTROL::ModoRecruit()
     timeOutMenu = 0;
     lcd.lcdClear();
     setModo(MODE_RECRUIT);
-    segundos_RecruitTime = 40;
+    segundos_RecruitTime = parametrosConfiguracion[ID_MENU_RECRUIT].consigna;
     //segundos=0;
     //minutos=0;
     //horas=0;
     estadoPulsadoresActual=0;  //evitar arrastrar pulsaciones entre modos. 
 
-    pantallaPrint(0,0, "MODO RECRUIT < OFF >"); 
-    pantallaPrint(6,1, "00:00:40      ");
+    pantallaPrint(0,0, "MODO RECRUIT < OFF >");
+    ultraitoa(segundos_RecruitTime,msg_valorItoA);
+    pantallaPrint(11,1,msg_valorItoA);
+    lcdPrint(etiquetaBorrar);
+    pantallaPrint(6,1, "00:00:");
 
     pantallaPrint(0,3, "<CANCEL     RECRUIT>"); 
     _valorAnteriorEncoder = -1;
@@ -687,8 +690,11 @@ void PANEL_CONTROL::ModoRecruit()
       timeOutMenu=0;
       beep(BEEP_EXTRA_LARGO);
       pantallaPrint(16,0, "FF > ");  
-      pantallaPrint(6,1, "00:00:40 ");
-      segundos_RecruitTime = 40;
+      //pantallaPrint(6,1, "00:00:40 ");
+      pantallaPrint(11,1,msg_valorItoA);
+      lcdPrint(etiquetaBorrar);
+      pantallaPrint(6,1, "00:00:");
+      segundos_RecruitTime = parametrosConfiguracion[ID_MENU_RECRUIT].consigna;
       //setModo(MODE_WAIT_USER); 
     }
   }
@@ -702,7 +708,7 @@ void PANEL_CONTROL::ModoRecruit()
     beep(BEEP_CORTO);
     break;      
   case 4: 
-    segundos_RecruitTime = 40;   //por si acaso lo reseteo aqui tambien
+    segundos_RecruitTime = parametrosConfiguracion[ID_MENU_RECRUIT].consigna;   //por si acaso lo reseteo aqui tambien
     setModo(MODE_RUN);//vuelve al modo configuracion
     break;
   }
@@ -748,7 +754,7 @@ bool PANEL_CONTROL::MostarCuentaAtras(uint8_t linea)
 
   if(horas==0 && minutos==0 && segundos_RecruitTime==0 ){ 
     FLAG_cuentaAtrasActiva = false; 
-    segundos_RecruitTime = 40;  //reset del tiempo apra la proxima vez??
+    segundos_RecruitTime = parametrosConfiguracion[ID_MENU_RECRUIT].consigna;  //reset del tiempo apra la proxima vez??
   }
   else{FLAG_cuentaAtrasActiva = true; }
 
@@ -848,10 +854,6 @@ void PANEL_CONTROL::ModoConfigRespirador()
     if(consignaEnEdicion==ID_MENU_SEXO){
       if(_valorEncoder==1){ pantallaPrint(11,2, " M "); }
       else{ pantallaPrint(11,2, " H "); }
-    }
-    else if(consignaEnEdicion==ID_MENU_RECRUIT){
-      if(_valorEncoder>0){ pantallaPrint(11,2, "On "); }
-      else{ pantallaPrint(11,2, "Off"); }
     }
     else{
       ultraitoa(_valorEncoder, msg_valorItoA);
