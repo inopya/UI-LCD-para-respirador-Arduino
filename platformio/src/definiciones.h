@@ -42,5 +42,5 @@
 
 // #define setBit(data,y)       data |= (1 << y)          // Poner a 1 el bit (data.y) 
 // #define clearBit(data,y)     data &= ~(1 << y)         // Poner a 0 el bit (data.y)
-// #define togleBit(data,y)     data ^=getBit(y)          // Invertir el valor del bit (data.y)
+// #define togleBit(data,y)     data ^= (1 << y)          // Invertir el valor del bit (data.y)
 // #define togleByte(data)      data =~data               // Invertir el valor del byte (data)
